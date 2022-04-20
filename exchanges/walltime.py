@@ -19,6 +19,7 @@ class Walltime:
             info = json.loads(self.repo.get_general_info())
 
             return Information(
+                "Walltime",
                 "Bitcoin",
                 "BTC",
                 datetime.strptime(info["last_update"], "%Y-%m-%dT%H:%M:%SZ"),
@@ -64,6 +65,7 @@ class Walltime:
             ask_orders.append(self.parse_order(o))
 
         return BookOrder(
+            "Walltime",
             "Bitcoin",
             "BTC",
             datetime.fromtimestamp(int(info["timestamp"]) / 1000, tz=timezone.utc),

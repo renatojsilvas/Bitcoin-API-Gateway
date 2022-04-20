@@ -12,6 +12,7 @@ class Order:
 
 @dataclass
 class MetaData:
+    exchange: str
     name: str
     symbol: str
     info_date: datetime

@@ -8,6 +8,7 @@ import pytest
 
 def test_get_information_succesfully(mocker):
     expected = Information(
+        "Walltime",
         "Bitcoin",
         "BTC",
         datetime.strptime("2022-04-11T08:13:31Z", "%Y-%m-%dT%H:%M:%SZ"),
@@ -76,6 +77,7 @@ def test_get_information_unsuccesfully(mocker):
 
 def test_get_book_order_one_no_fraction_succesfully():
     expected = BookOrder(
+        "Walltime",
         "Bitcoin",
         "BTC",
         datetime.strptime(
@@ -120,6 +122,7 @@ def test_get_book_order_one_no_fraction_succesfully():
 
 def test_get_book_order_one_succesfully():
     expected = BookOrder(
+        "Walltime",
         "Bitcoin",
         "BTC",
         datetime.strptime(
@@ -193,6 +196,7 @@ def test_parse_order_fraction_sucesfully():
 
 def test_get_book_order_two_succesfully():
     expected = BookOrder(
+        "Walltime",
         "Bitcoin",
         "BTC",
         datetime.strptime(
@@ -256,6 +260,7 @@ def test_get_book_order_two_succesfully():
 
 def test_get_book_order_three_succesfully():
     expected = BookOrder(
+        "Walltime",
         "Bitcoin",
         "BTC",
         datetime.strptime(

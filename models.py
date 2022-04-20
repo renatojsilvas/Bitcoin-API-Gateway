@@ -7,7 +7,7 @@ from dataclasses import dataclass
 @dataclass
 class Order:
     price: Decimal
-    quantity: int
+    quantity: Decimal
 
 
 @dataclass

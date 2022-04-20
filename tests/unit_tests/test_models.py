@@ -74,6 +74,50 @@ def test_get_information_unsuccesfully(mocker):
         walltime.get_general_info()
 
 
+def test_get_book_order_one_no_fraction_succesfully():
+    expected = BookOrder(
+        "Bitcoin",
+        "BTC",
+        datetime.strptime(
+            "2022-04-15T11:44:39.931000Z+00:00", "%Y-%m-%dT%H:%M:%S.%fZ%z"
+        ),
+        "BRL",
+        [
+            Order(
+                Decimal("3337"),
+                Decimal("3337"),
+            )
+        ],
+        [Order(Decimal("67279"), Decimal("1345579932721"))],
+    )
+
+    def get_book_order():
+        return """{
+                    "timestamp":1650023079931,
+                    "xbt-brl":[    
+                                [
+                                "67279",
+                                "1345579932721"
+                                ]
+                    ],
+                    "brl-xbt":[    
+                        [
+                        "3337",
+                        "3337"
+                        ]   
+                    ]
+                }"""
+
+    repository = WalltimeRepository()
+    repository.get_book_order = get_book_order
+
+    walltime = Walltime(repository)
+
+    info = walltime.get_book_order()
+
+    assert info == expected
+
+
 def test_get_book_order_one_succesfully():
     expected = BookOrder(
         "Bitcoin",
@@ -84,7 +128,8 @@ def test_get_book_order_one_succesfully():
         "BRL",
         [
             Order(
-                Decimal("3337") / Decimal("100"), Decimal("3337") / Decimal("18865000")
+                Decimal("3337") / Decimal("100"),
+                Decimal("3337") / Decimal("18865000"),
             )
         ],
         [
@@ -120,6 +165,30 @@ def test_get_book_order_one_succesfully():
     info = walltime.get_book_order()
 
     assert info == expected
+
+
+def test_parse_order_no_fraction_sucesfully():
+    expected = Order(Decimal("3337"), Decimal("3337"))
+
+    repository = WalltimeRepository()
+    walltime = Walltime(repository)
+
+    actual = walltime.parse_order(["3337", "3337"])
+
+    assert actual == expected
+
+
+def test_parse_order_fraction_sucesfully():
+    expected = Order(
+        Decimal("3337") / Decimal("1000"), Decimal("3337") / Decimal("1000")
+    )
+
+    repository = WalltimeRepository()
+    walltime = Walltime(repository)
+
+    actual = walltime.parse_order(["3337/1000", "3337/1000"])
+
+    assert actual == expected
 
 
 def test_get_book_order_two_succesfully():

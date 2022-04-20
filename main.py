@@ -2,14 +2,24 @@ from typing import Optional
 
 from fastapi import FastAPI
 
+from exchanges.walltime import Walltime
+from models import Information
+from repositories.walltime import WalltimeRepository
+
+from fastapi.encoders import jsonable_encoder
+
 app = FastAPI()
 
 
-@app.get("/")
-def read_root():
-    return {"Hello": "World"}
+@app.get("/general")
+def read_root(response_model=Information):
+    exchange = Walltime(WalltimeRepository())
+    teste = exchange.get_general_info()
+    return jsonable_encoder(teste)
 
 
-@app.get("/items/{item_id}")
-def read_item(item_id: int, q: Optional[str] = None):
-    return {"item_id": item_id, "q": q}
+@app.get("/bookorder")
+def read_item():
+    exchange = Walltime(WalltimeRepository())
+    teste = exchange.get_book_order()
+    return jsonable_encoder(teste)

@@ -34,27 +34,34 @@ class Walltime:
                 "It was not possible to parse data downloaded from Walltime"
             )
 
+    def parse_order(self, order_str):
+        if len(order_str[0].split("/")) == 1:
+            price = Decimal(order_str[0])
+        else:
+            price = Decimal(order_str[0].split("/")[0]) / Decimal(
+                order_str[0].split("/")[1]
+            )
+
+        if len(order_str[1].split("/")) == 1:
+            quantity = Decimal(order_str[1])
+        else:
+            quantity = Decimal(order_str[1].split("/")[0]) / Decimal(
+                order_str[1].split("/")[1]
+            )
+
+        return Order(price, quantity)
+
     def get_book_order(self) -> BookOrder:
 
         info = json.loads(self.repo.get_book_order())
 
         bid_orders = []
         for o in info["brl-xbt"]:
-            bid_orders.append(
-                Order(
-                    Decimal(o[0].split("/")[0]) / Decimal(o[0].split("/")[1]),
-                    Decimal(o[1].split("/")[0]) / Decimal(o[1].split("/")[1]),
-                )
-            )
+            bid_orders.append(self.parse_order(o))
 
         ask_orders = []
         for o in info["xbt-brl"]:
-            ask_orders.append(
-                Order(
-                    Decimal(o[0].split("/")[0]) / Decimal(o[0].split("/")[1]),
-                    Decimal(o[1].split("/")[0]) / Decimal(o[1].split("/")[1]),
-                )
-            )
+            ask_orders.append(self.parse_order(o))
 
         return BookOrder(
             "Bitcoin",
